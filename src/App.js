@@ -21,26 +21,38 @@ class App extends Component {
     }
   }
 
-  onMarkerClick = (marker) => {
-    //keep id of currently selected marker
-    const location = places.filter(place => place.id === marker.id)[0];
-    this.setState({ clickedLocation: location });
 
-    //stop animation for all markers
-    this.stopMarkersAnimation();
-    marker.setAnimation(window.google.maps.Animation.BOUNCE);
+  onMarkerClick = (marker) => {
+    const location = places.filter(place => place.id === marker.id)[0];
+
+    if (marker.getAnimation()) {
+      marker.setAnimation(null);
+      this.infoWindow.close();
+      this.setState({ clickedLocation: null })
+    }
+    else {
+      this.stopMarkersAnimation();
+      marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      this.setState({ clickedLocation: location })
+      this.infoWindow.setContent('Loading...' + this.state.clickedLocation.name);
+      this.infoWindow.open(this.map, marker);
+    }
+
+
   }
 
   stopMarkersAnimation = () => {
     //stop all marker animation
     this.markers.forEach(marker => {
       marker.setAnimation(null);
+      this.setState({ clickedLocation: null })
     })
   }
 
   setSentMarkers = (map, markers) => {
     this.map = map;
     this.markers = markers;
+    this.infoWindow = new window.google.maps.InfoWindow();
   }
 
   render() {
