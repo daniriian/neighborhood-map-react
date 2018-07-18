@@ -131,6 +131,7 @@ class App extends Component {
   }
 
   filterMarkers = (filtered) => {
+    console.log(filtered)
     // Nothing to filter ?
     if (filtered == null) {
       // Show all markers
@@ -140,7 +141,12 @@ class App extends Component {
       // Hide all markers
       this.markers.forEach(marker => { marker.setVisible(false) });
       // Show the corresponding marker
-      this.markers.filter(marker => marker.id === filtered[0].id)[0].setVisible(true);
+      let v=[];
+      this.markers.forEach(m=>filtered.forEach(f=>{
+        if(m.id === f.id) v.push(m);
+      }))
+      v.forEach(marker =>{marker.setVisible(true)})
+      // this.markers.filter(marker => marker.id === filtered[0].id)[0].setVisible(true);
       // If there is no result after filteration
     } else {
       this.markers.forEach(marker => { marker.setVisible(false) });
