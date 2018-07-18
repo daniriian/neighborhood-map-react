@@ -22,7 +22,7 @@ class App extends Component {
     super(props)
     this.state = {
       places: places,
-      clickedLocation: null,
+      // clickedLocation: null,
       info: null
     }
   }
@@ -47,7 +47,7 @@ class App extends Component {
       marker.setAnimation(null);
       this.infoWindow.close();
       this.setState({
-        clickedLocation: null,
+        // clickedLocation: null,
         info: null
       })
       console.log('i am null')//ok, nu intra
@@ -124,7 +124,7 @@ class App extends Component {
     //stop all marker animation
     this.markers.forEach(marker => {
       marker.setAnimation(null);
-      this.setState({ clickedLocation: null })
+      // this.setState({ clickedLocation: null })
     })
   }
 
