@@ -14,14 +14,39 @@ const places = [
 
 class App extends Component {
 
-  onMarkerClick = () => {
+  constructor(props) {
+    super(props)
+    this.state = {
+      clickedLocation: null
+    }
+  }
 
+  onMarkerClick = (marker) => {
+    //keep id of currently selected marker
+    const location = places.filter(place => place.id === marker.id)[0];
+    this.setState({ clickedLocation: location });
+
+    //stop animation for all markers
+    this.stopMarkersAnimation();
+    marker.setAnimation(window.google.maps.Animation.BOUNCE);
+  }
+
+  stopMarkersAnimation = () => {
+    //stop all marker animation
+    this.markers.forEach(marker => {
+      marker.setAnimation(null);
+    })
+  }
+
+  setSentMarkers = (map, markers) => {
+    this.map = map;
+    this.markers = markers;
   }
 
   render() {
     return (
       <div className="App">
-        <Map locations={places} onMarkerClick={this.onMarkerClick} />
+        <Map locations={places} onMarkerClick={this.onMarkerClick} sendMarkers={this.setSentMarkers} onMapClick={this.stopMarkersAnimation} />
       </div>
     );
   }

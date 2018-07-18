@@ -20,26 +20,34 @@ class Map extends Component {
 
         //Create markers
         let markers = this.props.locations.map(location => {
-            new window.google.maps.Marker({
+            return new window.google.maps.Marker({
                 position: location.position,
                 map: map,
                 animation: window.google.maps.Animation.DROP,
-                title: location.name
+                title: location.name,
+                id: location.id
             })
         });
 
         //Event handler for markers (click)
         markers.forEach(marker => {
-            marker.addListener("click", () => {
+            marker.addListener('click', () => {
                 this.props.onMarkerClick(marker);
             });
         });
+
+        //send all markers to parent component
+        this.props.sendMarkers(map, markers);
+
     }
 
 
     render() {
         return (
-            <div id="map"></div>
+            <div id="map"
+            /* onClick={this.props.onMapClick} */
+            >
+            </div>
         );
     }
 }
