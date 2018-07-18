@@ -14,7 +14,7 @@ const places = [
 
 const client_id = "IDVQQW1QV53UQ54QCLNFV5VZZV445EU1SQAASL0OP5KSUPGL";
 const client_secret = "SQ5A1ZPSZKWAETXUEI1UAUOGW2U2ZMUXYCXVAX3SGMRTZRYH";
-
+let info = null;
 
 class App extends Component {
 
@@ -22,68 +22,47 @@ class App extends Component {
     super(props)
     this.state = {
       places: places,
-      // clickedLocation: null,
-      info: null
     }
   }
 
-  componentDidMount() {
-    // let locations = places.map(place => {
-    //   return {
-    //     name: place.name,
-    //     position: place.position,
-    //     id: place.id,
-    //     info: null,
-    //     // active: false
-    //   }
-    // })
-    // this.setState({ places: locations })
-  }
 
-  onMarkerClick = (marker, loc) => {
-    const location = loc || this.state.places.filter(place => place.id === marker.id)[0];
-    console.log(location.name); //ok
+
+  onMarkerClick = (marker) => {
+    console.log(marker)
+    const location = this.state.places.filter(place => place.id === marker.id)[0];
+    //marker allready selected ?
     if (marker.getAnimation() !== null) {
       marker.setAnimation(null);
       this.infoWindow.close();
-      this.setState({
-        // clickedLocation: null,
-        info: null
-      })
-      console.log('i am null')//ok, nu intra
+      info = null;
     }
     else {
-      console.log(this);
+      //stop animation for all markers
       this.stopMarkersAnimation();
+      //animate only selected marker
       marker.setAnimation(window.google.maps.Animation.BOUNCE);
-      this.setState({
-        // clickedLocation: location,
-        info: null
-      })
+      info = null
 
-      console.log('starea este', this.state)
+      //fetch data from Foursquare API
+      this.getFSData(marker, this.infoWindow);
 
-      this.getFSData(marker, this.infoWindow);//fetch data from Foursquare API
-
-      if (this.state.info === null) {
+      if (info === null) {
+        this.infoWindow.close();
         this.infoWindow.setContent(`<h3>Loading data for  ${location.name} ...</h3><h3>Please wait</h3>`);
         this.infoWindow.open(this.map, marker);
+        this.infoWindow.marker = marker;
+        console.log('infowindow marker', marker)
+      }
 
+      else {
+        this.infoWindow.setContent(`<div>${info}</div>
+        <h6>Source: <a href="https://developer.foursquare.com/">Foursquare</a></h6>`);
       }
-      else if (this.state.info === -1) {
-        this.infoWindow.setContent(`<h3>Error loading data for ${this.location.name} ...</h3>`);
-        this.infoWindow.open(this.map, marker);
-      }
-      // else {
-      //   this.infoWindow.setContent(`<div>${this.state.info}</div>
-      //   <h6>Source: <a href="https://developer.foursquare.com/">Foursquare</a></h6>`);
-      // }
     }
   }
 
   getFSData = (marker, infowindow) => {
 
-    console.log('marker from getFSData', marker);
     let url = "https://api.foursquare.com/v2/venues/search?client_id=" + client_id + "&client_secret=" + client_secret + "&v=20180710&ll=" + marker.getPosition().lat() + "," + marker.getPosition().lng() + "&limit=1";
 
     fetch(url)
@@ -102,22 +81,20 @@ class App extends Component {
         let readMore = `https://foursquare.com/v/${location_data.id}`;
 
 
-        innerHtml += `<h1>${name}</h1>`
-        innerHtml += `<h4>${city}</h1>`
-        innerHtml += `<h4>${address}</h1>`
+        innerHtml += `<h2>${name}</h2>`
+        innerHtml += `<h4>${city}</h4>`
+        innerHtml += `<h4>${address}</h4>`
         innerHtml += `<a href=${readMore} target="_blank">Read more...</a></a>`
         innerHtml += `<h5>Source: <a href="https://developer.foursquare.com/">Foursquare</a></h5></div>`
 
-        console.log(innerHtml);
-        this.setState({ info: innerHtml })
-        infowindow.setContent(this.state.info);
+        info = innerHtml;
+        infowindow.setContent(info);
       })
       .catch(err => {
         console.log(err);
         this.setState({ info: `<p>Error loading Foursquare API. Please try again later</p>` });
-        infowindow.setContent(this.state.info);
+        infowindow.setContent(info);
       });
-    console.log('from getFSData ultimul', this.state.info)
   }
 
   stopMarkersAnimation = () => {
@@ -132,10 +109,19 @@ class App extends Component {
     this.map = map;
     this.markers = markers;
     this.infoWindow = new window.google.maps.InfoWindow();
+    this.infoWindow.marker = null;
+    this.infoWindow.addListener('closeclick', () => { this.stopMarkerAnimation() })
+  }
+
+  stopMarkerAnimation = () => {
+    this.infoWindow.marker.setAnimation(null);
+    console.log(this.infoWindow)
   }
 
   filterMarkers = (filtered) => {
-    console.log(filtered)
+    this.infoWindow.close();
+    this.stopMarkersAnimation();
+    info = null;
     // Nothing to filter ?
     if (filtered == null) {
       // Show all markers
@@ -145,11 +131,11 @@ class App extends Component {
       // Hide all markers
       this.markers.forEach(marker => { marker.setVisible(false) });
       // Show the corresponding marker
-      let v=[];
-      this.markers.forEach(m=>filtered.forEach(f=>{
-        if(m.id === f.id) v.push(m);
+      let v = [];
+      this.markers.forEach(m => filtered.forEach(f => {
+        if (m.id === f.id) v.push(m);
       }))
-      v.forEach(marker =>{marker.setVisible(true)})
+      v.forEach(marker => { marker.setVisible(true) })
       // this.markers.filter(marker => marker.id === filtered[0].id)[0].setVisible(true);
       // If there is no result after filteration
     } else {
@@ -161,9 +147,10 @@ class App extends Component {
 
   locationClick = (loc) => {
     const m = this.markers.filter(marker => marker.id === loc.id)[0];
-    
-    this.onMarkerClick(m, loc);
-    
+    this.setState({ info: null });
+    console.log('state', this.state.info)
+    this.onMarkerClick(m);
+
   }
 
   render() {
