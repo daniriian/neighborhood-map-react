@@ -39,9 +39,38 @@
 .search {
     width: 250px;
     height: 350px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(248, 242, 159, 0.9);
     position: absolute;
     top: 50 px;
     left: 0;
-    z-index: 1000;
+    z-index: 100;
+    border: 2px solid yellow;
+    border-radius: 5px;
+    box-shadow: 10px 10px 5px rgb(214, 213, 213);
+}
+
+.search_show {
+    visibility: visible;
+}
+
+input {
+    display: block;
+    width: 90%;
+    height: 10%;
+    padding: 0.5rem;
+    margin: 2.5% auto;
+    text-transform: uppercase;
+}
+
+.place {
+    margin: 1.3rem;
+    user-select: none;
+    font-family: proxima-nova, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #231f20;
+    text-transform: uppercase;
+    line-height: 1.5em;
+    text-align: left;
 }

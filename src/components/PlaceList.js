@@ -26,7 +26,7 @@ class PlaceList extends Component {
 
     render() {
         return (
-            <div className="search">
+            <div className="search search_show">
                 <input type="search" placeholder="search" value={this.state.query} onChange={this.search} />
 
                 <div>
@@ -35,6 +35,7 @@ class PlaceList extends Component {
                             role="button"
                             aria-label="location"
                             onClick={() => { this.props.locationClick(loc) }}
+                            className="place"
                         /*    className={loc.clicked ? "location clicked" : "location"}*/
                         >
                             {loc.name}

@@ -60,7 +60,7 @@ function loadMapJS(src) {
     script.src = src;
     script.async = true;
     script.onerror = function () {
-        document.write("Google Maps can't be loaded");
+        alert("Google Maps can't be loaded");
     };
     ref.parentNode.insertBefore(script, ref);
 }

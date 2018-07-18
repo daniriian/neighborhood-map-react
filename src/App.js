@@ -45,13 +45,12 @@ class App extends Component {
 
       //fetch data from Foursquare API
       this.getFSData(marker, this.infoWindow);
-
+      console.log(info)
       if (info === null) {
         this.infoWindow.close();
         this.infoWindow.setContent(`<h3>Loading data for  ${location.name} ...</h3><h3>Please wait</h3>`);
         this.infoWindow.open(this.map, marker);
         this.infoWindow.marker = marker;
-        console.log('infowindow marker', marker)
       }
 
       else {
@@ -82,17 +81,16 @@ class App extends Component {
 
 
         innerHtml += `<h2>${name}</h2>`
-        innerHtml += `<h4>${city}</h4>`
-        innerHtml += `<h4>${address}</h4>`
+        innerHtml += `<h3>${city}</h3>`
+        innerHtml += `<h3>${address}</h3>`
         innerHtml += `<a href=${readMore} target="_blank">Read more...</a></a>`
-        innerHtml += `<h5>Source: <a href="https://developer.foursquare.com/">Foursquare</a></h5></div>`
+        innerHtml += `<h4>Source: <a href="https://developer.foursquare.com/">Foursquare</a></h4></div>`
 
         info = innerHtml;
         infowindow.setContent(info);
       })
       .catch(err => {
-        console.log(err);
-        this.setState({ info: `<p>Error loading Foursquare API. Please try again later</p>` });
+        info = `<p>Error loading Foursquare API. Please try again later</p>`;
         infowindow.setContent(info);
       });
   }
@@ -108,14 +106,13 @@ class App extends Component {
   setSentMarkers = (map, markers) => {
     this.map = map;
     this.markers = markers;
-    this.infoWindow = new window.google.maps.InfoWindow();
+    this.infoWindow = new window.google.maps.InfoWindow({ maxWidth: 220 });
     this.infoWindow.marker = null;
     this.infoWindow.addListener('closeclick', () => { this.stopMarkerAnimation() })
   }
 
   stopMarkerAnimation = () => {
     this.infoWindow.marker.setAnimation(null);
-    console.log(this.infoWindow)
   }
 
   filterMarkers = (filtered) => {
@@ -148,7 +145,6 @@ class App extends Component {
   locationClick = (loc) => {
     const m = this.markers.filter(marker => marker.id === loc.id)[0];
     this.setState({ info: null });
-    console.log('state', this.state.info)
     this.onMarkerClick(m);
 
   }
