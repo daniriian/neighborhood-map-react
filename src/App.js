@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Map from './components/Map';
+import PlaceList from './components/PlaceList';
 import './App.css';
 
 const places = [
@@ -129,10 +130,41 @@ class App extends Component {
     this.infoWindow = new window.google.maps.InfoWindow();
   }
 
+  filterMarkers = (filtered) => {
+    // Nothing to filter ?
+    if (filtered == null) {
+      // Show all markers
+      this.markers.forEach(marker => { marker.setVisible(true) });
+    }
+    else if (filtered.length > 0) {
+      // Hide all markers
+      this.markers.forEach(marker => { marker.setVisible(false) });
+      // Show the corresponding marker
+      this.markers.filter(marker => marker.id === filtered[0].id)[0].setVisible(true);
+      // If there is no result after filteration
+    } else {
+      this.markers.forEach(marker => { marker.setVisible(false) });
+    }
+
+  }
+
+
+  locationClick = () => {
+
+  }
+
   render() {
     return (
       <div className="App">
-        <Map locations={places} onMarkerClick={this.onMarkerClick} sendMarkers={this.setSentMarkers} onMapClick={this.stopMarkersAnimation} />
+        <PlaceList location_list={this.state.places}
+          filter={this.filterMarkers}
+          locationClick={this.locationClick}
+        />
+        <Map locations={places}
+          onMarkerClick={this.onMarkerClick}
+          sendMarkers={this.setSentMarkers}
+          onMapClick={this.stopMarkersAnimation}
+        />
       </div>
     );
   }

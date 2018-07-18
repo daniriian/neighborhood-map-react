@@ -35,3 +35,13 @@
     width: 100vw;
     height: 100vh;
 }
+
+.search {
+    width: 250px;
+    height: 350px;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 50 px;
+    left: 0;
+    z-index: 1000;
+}
