@@ -40,34 +40,38 @@ class App extends Component {
     // this.setState({ places: locations })
   }
 
-  onMarkerClick = (marker) => {
-    const location = this.state.places.filter(place => place.id === marker.id)[0];
-
-    if (marker.getAnimation()) {
+  onMarkerClick = (marker, loc) => {
+    const location = loc || this.state.places.filter(place => place.id === marker.id)[0];
+    console.log(location.name); //ok
+    if (marker.getAnimation() !== null) {
       marker.setAnimation(null);
       this.infoWindow.close();
       this.setState({
         clickedLocation: null,
         info: null
       })
+      console.log('i am null')//ok, nu intra
     }
     else {
+      console.log(this);
       this.stopMarkersAnimation();
       marker.setAnimation(window.google.maps.Animation.BOUNCE);
       this.setState({
-        clickedLocation: location,
+        // clickedLocation: location,
         info: null
       })
+
+      console.log('starea este', this.state)
 
       this.getFSData(marker, this.infoWindow);//fetch data from Foursquare API
 
       if (this.state.info === null) {
-        this.infoWindow.setContent(`<h3>Loading data for  ${this.state.clickedLocation.name} ...</h3><h3>Please wait</h3>`);
+        this.infoWindow.setContent(`<h3>Loading data for  ${location.name} ...</h3><h3>Please wait</h3>`);
         this.infoWindow.open(this.map, marker);
 
       }
       else if (this.state.info === -1) {
-        this.infoWindow.setContent(`<h3>Error loading data for ${this.state.clickedLocation.name} ...</h3>`);
+        this.infoWindow.setContent(`<h3>Error loading data for ${this.location.name} ...</h3>`);
         this.infoWindow.open(this.map, marker);
       }
       // else {
@@ -79,6 +83,7 @@ class App extends Component {
 
   getFSData = (marker, infowindow) => {
 
+    console.log('marker from getFSData', marker);
     let url = "https://api.foursquare.com/v2/venues/search?client_id=" + client_id + "&client_secret=" + client_secret + "&v=20180710&ll=" + marker.getPosition().lat() + "," + marker.getPosition().lng() + "&limit=1";
 
     fetch(url)
@@ -103,10 +108,9 @@ class App extends Component {
         innerHtml += `<a href=${readMore} target="_blank">Read more...</a></a>`
         innerHtml += `<h5>Source: <a href="https://developer.foursquare.com/">Foursquare</a></h5></div>`
 
-        console.log(innerHtml)
+        console.log(innerHtml);
         this.setState({ info: innerHtml })
         infowindow.setContent(this.state.info);
-        console.log('from getFSData', this.state.info)
       })
       .catch(err => {
         console.log(err);
@@ -149,8 +153,11 @@ class App extends Component {
   }
 
 
-  locationClick = () => {
-
+  locationClick = (loc) => {
+    const m = this.markers.filter(marker => marker.id === loc.id)[0];
+    
+    this.onMarkerClick(m, loc);
+    
   }
 
   render() {
