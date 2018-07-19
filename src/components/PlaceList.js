@@ -35,6 +35,7 @@ class PlaceList extends Component {
                             role="button"
                             aria-label="location"
                             onClick={() => { this.props.locationClick(loc) }}
+                            onKeyPress={() => { this.props.locationClick(loc) }}
                             className="place"
                             tabindex={loc.id + 1}
                         >

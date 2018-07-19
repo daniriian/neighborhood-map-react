@@ -21,11 +21,11 @@ class Map extends Component {
 
         //instantiate the map
         const map = new window.google.maps.Map(mapview, {
-            center: { lat: 46.7667271, lng: 23.5823639 },
+            center: { lat: 46.775152, lng: 23.568993 },
             zoom: 14,
+            mapTypeControl: false,
             mapTypeControlOptions: {
-                mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain',
-                    'styled_map']
+                mapTypeIds: ['styled_map']
             }
         });
 
@@ -67,6 +67,8 @@ class Map extends Component {
                         role="button"
                         aria-label="menu"
                         onClick={() => { this.props.togglePlaceList() }}
+                        onKeyPress={() => { this.props.togglePlaceList() }}
+                        tabindex="1"
                     >
                         &#9776;
                     </div>
