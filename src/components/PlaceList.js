@@ -26,7 +26,7 @@ class PlaceList extends Component {
 
     render() {
         return (
-            <div className="search search_show">
+            <div className={this.props.placeListVisible ? "search hide" : "search show"}>
                 <input type="search" placeholder="search" value={this.state.query} onChange={this.search} />
 
                 <div>

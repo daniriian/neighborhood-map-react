@@ -22,13 +22,13 @@ class App extends Component {
     super(props)
     this.state = {
       places: places,
+      placeListVisible: true
     }
   }
 
 
 
   onMarkerClick = (marker) => {
-    console.log(marker)
     const location = this.state.places.filter(place => place.id === marker.id)[0];
     //marker allready selected ?
     if (marker.getAnimation() !== null) {
@@ -45,7 +45,6 @@ class App extends Component {
 
       //fetch data from Foursquare API
       this.getFSData(marker, this.infoWindow);
-      console.log(info)
       if (info === null) {
         this.infoWindow.close();
         this.infoWindow.setContent(`<h3>Loading data for  ${location.name} ...</h3><h3>Please wait</h3>`);
@@ -55,7 +54,7 @@ class App extends Component {
 
       else {
         this.infoWindow.setContent(`<div>${info}</div>
-        <h6>Source: <a href="https://developer.foursquare.com/">Foursquare</a></h6>`);
+        <h6>Source: <a href="https://developer.foursquare.com/">foursquare.com</a></h6>`);
       }
     }
   }
@@ -106,7 +105,7 @@ class App extends Component {
   setSentMarkers = (map, markers) => {
     this.map = map;
     this.markers = markers;
-    this.infoWindow = new window.google.maps.InfoWindow({ maxWidth: 220 });
+    this.infoWindow = new window.google.maps.InfoWindow({ maxWidth: 180 });
     this.infoWindow.marker = null;
     this.infoWindow.addListener('closeclick', () => { this.stopMarkerAnimation() })
   }
@@ -149,18 +148,31 @@ class App extends Component {
 
   }
 
+  togglePlaceList = () => {
+    let isVisible = this.state.placeListVisible;
+    this.setState({ placeListVisible: !isVisible });
+    console.log("hamburger", this.state.placeListVisible);
+  }
+
   render() {
     return (
       <div className="App">
-        <PlaceList location_list={this.state.places}
-          filter={this.filterMarkers}
-          locationClick={this.locationClick}
-        />
-        <Map locations={places}
+
+        <Map
+          locations={places}
           onMarkerClick={this.onMarkerClick}
           sendMarkers={this.setSentMarkers}
           onMapClick={this.stopMarkersAnimation}
+          togglePlaceList={this.togglePlaceList}
         />
+
+        <PlaceList
+          placeListVisible={this.state.placeListVisible}
+          location_list={this.state.places}
+          filter={this.filterMarkers}
+          locationClick={this.locationClick}
+        />
+
       </div>
     );
   }
