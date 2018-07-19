@@ -27,7 +27,7 @@ class PlaceList extends Component {
     render() {
         return (
             <div className={this.props.placeListVisible ? "search hide" : "search show"}>
-                <input type="search" placeholder="search" value={this.state.query} onChange={this.search} />
+                <input type="search" placeholder="search" value={this.state.query} onChange={this.search} aria-label="search" tabindex="1" />
 
                 <div>
                     {this.state.locations.map(loc =>
@@ -36,7 +36,7 @@ class PlaceList extends Component {
                             aria-label="location"
                             onClick={() => { this.props.locationClick(loc) }}
                             className="place"
-                        /*    className={loc.clicked ? "location clicked" : "location"}*/
+                            tabindex={loc.id + 1}
                         >
                             {loc.name}
                         </div>)}

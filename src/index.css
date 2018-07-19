@@ -43,7 +43,8 @@ input {
 }
 
 .place {
-    margin: 1.3rem;
+    margin: 5px 20px;
+    padding: 0 10px;
     user-select: none;
     font-family: proxima-nova, sans-serif;
     font-style: normal;
@@ -51,8 +52,11 @@ input {
     letter-spacing: 2px;
     color: #231f20;
     text-transform: uppercase;
-    line-height: 1.5em;
+    line-height: 2.5em;
     text-align: left;
+}
+.place:hover {
+    background-color: orange;
 }
 
 .h_button {

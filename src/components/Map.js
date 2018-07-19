@@ -65,14 +65,14 @@ class Map extends Component {
                     <div
                         className="h_button"
                         role="button"
+                        aria-label="menu"
                         onClick={() => { this.props.togglePlaceList() }}
                     >
                         &#9776;
                     </div>
-
                 </div>
 
-                <div id="map">
+                <div id="map" aria-label="map" tabindex="-1">
                 </div>
 
             </div>
