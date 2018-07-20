@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { myStyledMap } from '../Style/MapStyle.js';
 
+window.gm_authFailure = function () {
+    // remove the map div or maybe call another API to load map
+    // maybe display a useful message to the user
+    console.log('vasile');
+    alert('Google maps failed to load!');
+}
 
 class Map extends Component {
 
@@ -17,7 +23,6 @@ class Map extends Component {
         var styledMapType = new window.google.maps.StyledMapType(myStyledMap,
             { name: 'Styled Map' });
 
-        console.log(myStyledMap);
 
         //instantiate the map
         const map = new window.google.maps.Map(mapview, {
@@ -68,13 +73,13 @@ class Map extends Component {
                         aria-label="menu"
                         onClick={() => { this.props.togglePlaceList() }}
                         onKeyPress={() => { this.props.togglePlaceList() }}
-                        tabindex="1"
+                        tabIndex="1"
                     >
                         &#9776;
                     </div>
                 </div>
 
-                <div id="map" aria-label="map" tabindex="-1">
+                <div id="map" aria-label="map" tabIndex="-1">
                 </div>
 
             </div>
@@ -84,6 +89,11 @@ class Map extends Component {
 
 export default Map;
 
+window.gm_authFailure = () => {
+
+    alert('Google maps failed to load!');
+}
+
 function loadMapJS(src) {
     const ref = window.document.getElementsByTagName("script")[0];
     const script = window.document.createElement("script");
@@ -92,5 +102,10 @@ function loadMapJS(src) {
     script.onerror = function () {
         alert("Google Maps can't be loaded");
     };
+    window.gm_authFailure = function () {
+        // remove the map div or maybe call another API to load map
+        // maybe display a useful message to the user
+        alert('Google maps failed to load!');
+    }
     ref.parentNode.insertBefore(script, ref);
 }
