@@ -6,58 +6,9 @@ body {
 
 #map {
     width: 100%;
-    height: calc( 100vh - 62px);
+    height: calc(100vh - 62px);
 }
 
-.search {
-    width: 30vw;
-    max-width: 350px;
-    min-width: 200px;
-    height: 40vh;
-    min-height: 350px;
-    background-color: rgba(248, 242, 159, 0.7);
-    position: absolute;
-    top: 63px;
-    left: 0;
-    z-index: 100;
-    border: 2px solid yellow;
-    border-radius: 5px;
-    box-shadow: 10px 10px 5px rgb(214, 213, 213);
-}
-
-.show {
-    display: block;
-}
-
-.hide {
-    display: none;
-}
-
-input {
-    display: block;
-    width: 90%;
-    height: 10%;
-    padding: 0.5rem;
-    margin: 2.5% auto;
-    text-transform: uppercase;
-}
-
-.place {
-    margin: 5px 20px;
-    padding: 0 10px;
-    user-select: none;
-    font-family: proxima-nova, sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    letter-spacing: 2px;
-    color: #231f20;
-    text-transform: uppercase;
-    line-height: 2.5em;
-    text-align: left;
-}
-.place:hover {
-    background-color: orange;
-}
 
 .h_button {
     line-height: 100%;
@@ -91,9 +42,8 @@ input {
     .h_button {
         display: none;
     }
-    .search {
-        display: block;
-    }
+
+
     .mobile {
         display: block;
     }
