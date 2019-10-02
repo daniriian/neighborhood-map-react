@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {togglePlaceList} from './redux/actions/actions';
+
 import Map from './components/map/Map';
 import PlaceList from './components/placeList/PlaceList';
 import './App.css';
@@ -14,7 +17,7 @@ class App extends Component {
     super(props);
     this.state = {
       places: places,
-      placeListVisible: true
+      // placeListVisible: true,
     };
   }
 
@@ -102,7 +105,7 @@ class App extends Component {
   setSentMarkers = (map, markers) => {
     this.map = map;
     this.markers = markers;
-    this.infoWindow = new window.google.maps.InfoWindow({ maxWidth: 180 });
+    this.infoWindow = new window.google.maps.InfoWindow({maxWidth: 180});
     this.infoWindow.marker = null;
     this.infoWindow.addListener('closeclick', () => {
       this.stopMarkerAnimation();
@@ -149,15 +152,15 @@ class App extends Component {
 
   locationClick = loc => {
     const m = this.markers.filter(marker => marker.id === loc.id)[0];
-    this.setState({ info: null });
+    this.setState({info: null});
     this.onMarkerClick(m);
   };
 
-  togglePlaceList = () => {
-    let isVisible = this.state.placeListVisible;
-    this.setState({ placeListVisible: !isVisible });
-    console.log('hamburger', this.state.placeListVisible);
-  };
+  // togglePlaceList = () => {
+  //   let isVisible = this.props.placeListVisible;
+  //   // this.setState({placeListVisible: !isVisible});
+  //   console.log('hamburger', this.props.placeListVisible);
+  // };
 
   render() {
     return (
@@ -167,11 +170,11 @@ class App extends Component {
           onMarkerClick={this.onMarkerClick}
           sendMarkers={this.setSentMarkers}
           onMapClick={this.stopMarkersAnimation}
-          togglePlaceList={this.togglePlaceList}
+          togglePlaceList={this.props.togglePlaceList}
         />
 
         <PlaceList
-          placeListVisible={this.state.placeListVisible}
+          placeListVisible={this.props.placeListVisible}
           location_list={this.state.places}
           filter={this.filterMarkers}
           locationClick={this.locationClick}
@@ -181,4 +184,17 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {placeListVisible: state.placeListVisible};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    togglePlaceList: () => dispatch(togglePlaceList()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
